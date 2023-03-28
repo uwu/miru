@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:miru/api.dart' as api;
+import 'package:miru/episode_list.dart';
 
 String titleCase(String text) {
   return text.split(" ").map((String word) {
@@ -31,6 +33,9 @@ class AnimePage extends StatelessWidget {
           );
         } else {
           final result = snapshot.data;
+
+          final pageScrollController = ScrollController();
+
           return Scaffold(
             body: Wrap(
               direction: Axis.vertical,
@@ -41,26 +46,20 @@ class AnimePage extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
+                      image: CachedNetworkImageProvider(image),
                       fit: BoxFit.cover,
-                      filterQuality: FilterQuality.high,
-                      image: NetworkImage(image),
                     ),
                   ),
                   width: MediaQuery.of(context).size.width,
                   height: 250,
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
+                        begin: Alignment.center,
                         end: Alignment.topCenter,
-                        stops: const [0.0, 0.1, 0.85, 1.0],
                         colors: [
-                          Theme.of(context).scaffoldBackgroundColor,
-                          Theme.of(context)
-                              .scaffoldBackgroundColor
-                              .withAlpha(0),
                           Colors.transparent,
-                          Colors.black,
+                          Color.fromARGB(128, 0, 0, 0),
                         ],
                       ),
                     ),
@@ -105,14 +104,19 @@ class AnimePage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      SizedBox(
+                      Container(
                         height: 150,
+                        padding: const EdgeInsets.all(8),
+                        width: MediaQuery.of(context).size.width,
+                        color: Theme.of(context).dividerColor.withAlpha(10),
                         child: Scrollbar(
+                          controller: pageScrollController,
                           thumbVisibility: true,
                           radius: const Radius.circular(8),
                           child: SingleChildScrollView(
+                            controller: pageScrollController,
                             child: Container(
-                              padding: const EdgeInsets.only(right: 8),
+                              padding: const EdgeInsets.only(right: 12),
                               child: Text(
                                 result["description"],
                                 style: Theme.of(context).textTheme.bodyMedium,
@@ -129,7 +133,7 @@ class AnimePage extends StatelessWidget {
                             Icons.calendar_today,
                             size: 16,
                           ),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: 6),
                           Text(
                             "${titleCase(result["type"])} - ${result["status"]}",
                             style: Theme.of(context).textTheme.bodyMedium,
@@ -144,12 +148,34 @@ class AnimePage extends StatelessWidget {
                             Icons.play_arrow,
                             size: 16,
                           ),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: 6),
                           Text(
                             "${result["episodes"].length} episodes",
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
+                      ),
+                      const SizedBox(height: 8),
+                      // Genres
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.category,
+                            size: 16,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            result["genres"].join(", "),
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Expanded(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: EpisodeList(episodes: result["episodes"]),
+                        ),
                       ),
                     ],
                   ),

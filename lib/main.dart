@@ -27,7 +27,7 @@ class MiruState extends State<Miru> {
         ColorScheme lightColorScheme;
         ColorScheme darkColorScheme;
 
-        if (false && lightDynamic != null && darkDynamic != null) {
+        if (lightDynamic != null && darkDynamic != null) {
           // On Android S+ devices, use the provided dynamic color scheme.
           lightColorScheme = lightDynamic.harmonized();
           // Repeat for the dark color scheme.

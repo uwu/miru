@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:miru/anime_page.dart';
 
@@ -24,27 +25,34 @@ class AnimeCard extends StatelessWidget {
       margin: const EdgeInsets.all(12),
       child: Card(
         elevation: 2,
-        clipBehavior: Clip.hardEdge,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
-            Image.network(
-              image,
+            CachedNetworkImage(
+              imageUrl: image,
               fit: BoxFit.cover,
               width: 200,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+              placeholder: (context, url) => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ],
-                );
-              },
+                  ),
+                ],
+              ),
+              errorWidget: (context, url, error) => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Expanded(
+                    child: Center(
+                      child: Icon(Icons.error),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Container(
               decoration: const BoxDecoration(
@@ -52,7 +60,7 @@ class AnimeCard extends StatelessWidget {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [
-                    Color.fromARGB(200, 0, 0, 0),
+                    Color.fromARGB(178, 0, 0, 0),
                     Colors.transparent,
                   ],
                 ),
