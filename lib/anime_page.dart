@@ -37,8 +37,7 @@ class AnimePage extends StatelessWidget {
           final pageScrollController = ScrollController();
 
           return Scaffold(
-            body: Wrap(
-              direction: Axis.vertical,
+            body: Column(
               children: [
                 Container(
                   height: MediaQuery.of(context).padding.top,
@@ -50,8 +49,10 @@ class AnimePage extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  width: MediaQuery.of(context).size.width,
-                  height: 250,
+                  constraints: const BoxConstraints(
+                    maxHeight: 275,
+                  ),
+                  height: MediaQuery.of(context).size.width / 16 * 9,
                   child: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -89,95 +90,114 @@ class AnimePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 500,
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        height: 150,
-                        padding: const EdgeInsets.all(8),
-                        width: MediaQuery.of(context).size.width,
-                        color: Theme.of(context).dividerColor.withAlpha(10),
-                        child: Scrollbar(
-                          controller: pageScrollController,
-                          thumbVisibility: true,
-                          radius: const Radius.circular(8),
-                          child: SingleChildScrollView(
+                        const SizedBox(height: 8),
+                        Container(
+                          constraints: BoxConstraints(
+                            maxHeight: MediaQuery.of(context).size.height / 6,
+                          ),
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Theme.of(context).dividerColor.withAlpha(10),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: Scrollbar(
                             controller: pageScrollController,
-                            child: Container(
-                              padding: const EdgeInsets.only(right: 12),
-                              child: Text(
-                                result["description"],
-                                style: Theme.of(context).textTheme.bodyMedium,
+                            radius: const Radius.circular(8),
+                            child: SingleChildScrollView(
+                              controller: pageScrollController,
+                              child: Container(
+                                padding: const EdgeInsets.only(right: 12),
+                                child: Text(
+                                  result["description"],
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      // Display release date and episode count, along with ongoing status
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.calendar_today,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            "${titleCase(result["type"])} - ${result["status"]}",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      // Episodes
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.play_arrow,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            "${result["episodes"].length} episodes",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      // Genres
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.category,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            result["genres"].join(", "),
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Expanded(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: EpisodeList(episodes: result["episodes"]),
+                        const SizedBox(height: 16),
+                        // Display release date and episode count, along with ongoing status
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.calendar_today,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: Text(
+                                "${titleCase(result["type"])} - ${result["status"]}",
+                                overflow: TextOverflow.clip,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 8),
+                        // Episodes
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.play_arrow,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: Text(
+                                "${result["episodes"].length} episodes",
+                                overflow: TextOverflow.clip,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        // Genres
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.category,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: Text(
+                                result["genres"].join(", "),
+                                overflow: TextOverflow.clip,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Expanded(
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
+                              ),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: EpisodeList(episodes: result["episodes"]),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

@@ -12,11 +12,9 @@ class EpisodeList extends StatelessWidget {
     final scrollController = ScrollController();
     return Material(
       child: Scrollbar(
-        thumbVisibility: true,
         radius: const Radius.circular(8),
         controller: scrollController,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.only(right: 12),
           controller: scrollController,
           child: Column(
             children: [
@@ -26,21 +24,31 @@ class EpisodeList extends StatelessWidget {
                     width: MediaQuery.of(context).size.width,
                     color: Theme.of(context).dividerColor.withAlpha(
                         int.parse("${episode["number"]}") % 2 == 0 ? 10 : 40),
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
                     child: Row(
                       children: [
-                        CachedNetworkImage(
-                          imageUrl:
-                              "https://cdn.discordapp.com/attachments/824921608560181261/1090347691223027813/image.png",
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.fitWidth,
-                          placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator(),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: Theme.of(context).dividerColor.withAlpha(
+                                int.parse("${episode["number"]}") % 2 == 0
+                                    ? 10
+                                    : 40),
                           ),
-                          errorWidget: (context, url, error) => const Icon(
-                            Icons.error,
-                            color: Colors.red,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          child: CachedNetworkImage(
+                            // TODO: generate thumbnail
+                            imageUrl:
+                                "https://cdn.discordapp.com/attachments/824921608560181261/1090406574985597108/Screenshot_20230328-234557.png",
+                            width: 80,
+                            fit: BoxFit.fitWidth,
+                            placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            errorWidget: (context, url, error) => const Icon(
+                              Icons.error,
+                              color: Colors.red,
+                            ),
                           ),
                         ),
                         Expanded(
@@ -62,7 +70,9 @@ class EpisodeList extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const Spacer(),
+                        const SizedBox(
+                          width: 8,
+                        ),
                         const Icon(
                           Icons.play_arrow,
                           size: 24,

@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "me.xirreal" "\0"
+            VALUE "CompanyName", "dev.xirreal" "\0"
             VALUE "FileDescription", "miru" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "miru" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 me.xirreal. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2023 dev.xirreal. All rights reserved." "\0"
             VALUE "OriginalFilename", "miru.exe" "\0"
             VALUE "ProductName", "miru" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
