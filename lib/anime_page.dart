@@ -52,7 +52,9 @@ class AnimePage extends StatelessWidget {
                   constraints: const BoxConstraints(
                     maxHeight: 275,
                   ),
-                  height: MediaQuery.of(context).size.width / 16 * 9,
+                  height: (MediaQuery.of(context).size.height < 500)
+                      ? 60
+                      : MediaQuery.of(context).size.width / 16 * 9,
                   child: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(

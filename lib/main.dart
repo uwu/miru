@@ -46,10 +46,12 @@ class MiruState extends State<Miru> {
         return MaterialApp(
           themeMode: _themeMode,
           theme: ThemeData(
+            splashFactory: InkSparkle.splashFactory,
             useMaterial3: true,
             colorScheme: lightColorScheme,
           ),
           darkTheme: ThemeData(
+            splashFactory: InkSparkle.splashFactory,
             useMaterial3: true,
             colorScheme: darkColorScheme,
           ),

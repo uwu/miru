@@ -41,6 +41,10 @@ dependencies:
   hive: ^2.2.3
   cached_network_image: ^3.2.3
   video_player: ^2.6.0
+  chewie: ^1.4.0
+  video_thumbnail: ^0.5.3
+  path_provider: ^2.0.14
+  lecle_yoyo_player: ^0.0.5+2
 
 dev_dependencies:
   flutter_test:

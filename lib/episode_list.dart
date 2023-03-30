@@ -1,6 +1,40 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:miru/episode_page.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:miru/api.dart' as api;
+
+Future<File> getPreviewImage(String episodeId) async {
+  // Attempt to read from cache
+  final directory = await getTemporaryDirectory();
+  final file = File('${directory.path}/thumb_$episodeId.jpg');
+  if (await file.exists()) {
+    return file;
+  }
+
+  final streams = await api.getStreams(episodeId);
+  final videoUrl = await api.getMiddleStreamPart(streams.first);
+
+  final byteData = await api.getData(videoUrl);
+  File tempVideo = File('${directory.path}/thumb_$episodeId.mp4')
+    ..createSync(recursive: true)
+    ..writeAsBytesSync(byteData);
+
+  final thumbnail = await VideoThumbnail.thumbnailData(
+    video: tempVideo.path,
+    imageFormat: ImageFormat.JPEG,
+    quality: 50,
+  );
+
+  if (thumbnail == null) {
+    return Future.error("Failed to generate thumbnail");
+  }
+
+  await file.writeAsBytes(thumbnail.toList());
+
+  return file;
+}
 
 class EpisodeList extends StatelessWidget {
   const EpisodeList({super.key, required this.episodes});
@@ -10,6 +44,7 @@ class EpisodeList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scrollController = ScrollController();
+
     return Material(
       child: Scrollbar(
         radius: const Radius.circular(8),
@@ -28,6 +63,8 @@ class EpisodeList extends StatelessWidget {
                     child: Row(
                       children: [
                         Container(
+                          width: 100,
+                          height: 57,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
                             color: Theme.of(context).dividerColor.withAlpha(
@@ -36,19 +73,25 @@ class EpisodeList extends StatelessWidget {
                                     : 40),
                           ),
                           clipBehavior: Clip.antiAliasWithSaveLayer,
-                          child: CachedNetworkImage(
-                            // TODO: generate thumbnail
-                            imageUrl:
-                                "https://cdn.discordapp.com/attachments/824921608560181261/1090406574985597108/Screenshot_20230328-234557.png",
-                            width: 80,
-                            fit: BoxFit.fitWidth,
-                            placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            errorWidget: (context, url, error) => const Icon(
-                              Icons.error,
-                              color: Colors.red,
-                            ),
+                          child: FutureBuilder(
+                            future: getPreviewImage(episode["id"]),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return const Icon(Icons.error_outline,
+                                    size: 57);
+                              } else if (snapshot.hasData) {
+                                return Image.file(
+                                  snapshot.data!,
+                                  width: 100,
+                                  height: 57,
+                                  fit: BoxFit.cover,
+                                );
+                              } else {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            },
                           ),
                         ),
                         Expanded(
