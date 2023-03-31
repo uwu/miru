@@ -62,7 +62,13 @@ Future<String> getPlaylist(String id, [String server = "gogocdn"]) async {
 
 Future<List<String>> getStreams(String id, [String server = "gogocdn"]) async {
   final playlistStreams = await getPlaylist(id, server);
-  final availableStreams = await http.get(Uri.parse(playlistStreams));
+  final availableStreams = await http
+      .get(
+        Uri.parse(playlistStreams),
+      )
+      .catchError(
+        (error) => throw Exception('Failed to load streams: $error'),
+      );
 
   final baseUrlForStreams =
       playlistStreams.substring(0, playlistStreams.lastIndexOf("/"));
