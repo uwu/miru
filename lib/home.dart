@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
-import "package:miru/page_builder.dart";
+import "package:miru/search.dart";
+import "page_builder.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
 class MiruHome extends StatefulWidget {
@@ -33,7 +34,12 @@ class MiruHomeState extends State<MiruHome> {
           IconButton(
             icon: const Icon(Icons.search),
             tooltip: 'Search',
-            onPressed: () => {},
+            onPressed: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SearchPage()),
+              ),
+            },
           ),
           PopupMenuButton<String>(
             onSelected: (String result) {},
@@ -73,13 +79,8 @@ class MiruHomeState extends State<MiruHome> {
         currentIndex: _selectedIndex,
       ),
       body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            PageBuilder(
-              currentSelection: _selectedIndex,
-            )
-          ],
+        child: PageBuilder(
+          currentSelection: _selectedIndex,
         ),
       ),
       floatingActionButton: FloatingActionButton(

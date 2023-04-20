@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:miru/episode_page.dart';
+import 'episode_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-import 'package:miru/api.dart' as api;
+import 'api.dart' as api;
 
 Future<File> getPreviewImage(String episodeId) async {
   // Attempt to read from cache

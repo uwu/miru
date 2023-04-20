@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'anime_card.dart';
-
+import 'grid.dart';
 import 'api.dart' as api;
-
 import 'utils.dart';
 
-const animesToShow = 10;
+class RecentlyUpdated extends StatelessWidget {
+  const RecentlyUpdated({super.key});
 
-class Carousel extends StatelessWidget {
-  const Carousel({super.key});
+  static const rowSize = 2;
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: api.getPopular(),
+      future: api.getLatest(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) {
           // while data is loading:
@@ -25,10 +24,10 @@ class Carousel extends StatelessWidget {
           );
         } else {
           // data loaded:
-          final trendingTop5 = snapshot.data["results"].take(animesToShow);
+          final recentlyUpdated = snapshot.data["results"];
           List<Widget> widgets = [];
 
-          for (final item in trendingTop5) {
+          for (final item in recentlyUpdated) {
             widgets.add(
               AnimeCard(
                 id: item["id"],
@@ -36,22 +35,14 @@ class Carousel extends StatelessWidget {
                     ? titleCase(removeDashes(item["id"]))
                     : item["title"],
                 image: item["image"],
+                size: MediaQuery.of(context).size.width / rowSize * 0.8,
+                episode: item["episodeNumber"].toString(),
               ),
             );
           }
 
-          return CarouselSlider(
-            options: CarouselOptions(
-              viewportFraction: 0.5,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 3),
-              autoPlayAnimationDuration: const Duration(milliseconds: 800),
-              autoPlayCurve: Curves.fastOutSlowIn,
-              enlargeCenterPage: true,
-              enlargeFactor: 0.25,
-              scrollDirection: Axis.horizontal,
-            ),
-            items: widgets,
+          return Grid(
+            children: widgets,
           );
         }
       },

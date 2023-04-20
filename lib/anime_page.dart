@@ -1,15 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:miru/api.dart' as api;
-import 'package:miru/episode_list.dart';
+import 'api.dart' as api;
+import 'episode_list.dart';
+import 'utils.dart';
+import 'tracking.dart' as tracking;
 
-String titleCase(String text) {
-  return text.split(" ").map((String word) {
-    return word[0].toUpperCase() + word.substring(1).toLowerCase();
-  }).join(" ");
-}
-
-class AnimePage extends StatelessWidget {
+class AnimePage extends StatefulWidget {
   const AnimePage(
       {super.key, required this.id, required this.title, required this.image});
   final String title;
@@ -17,9 +13,20 @@ class AnimePage extends StatelessWidget {
   final String id;
 
   @override
+  State<AnimePage> createState() => AnimePageState();
+}
+
+class AnimePageState extends State<AnimePage> {
+  bool isFavorite = false;
+  @override
   Widget build(BuildContext context) {
+    if (tracking.isFavorite(widget)) {
+      setState(() {
+        isFavorite = true;
+      });
+    }
     return FutureBuilder(
-      future: api.getAnime(id),
+      future: api.getAnime(widget.id),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) {
           // while data is loading:
@@ -45,7 +52,7 @@ class AnimePage extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: CachedNetworkImageProvider(image),
+                      image: CachedNetworkImageProvider(widget.image),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -80,12 +87,19 @@ class AnimePage extends StatelessWidget {
                           },
                         ),
                         IconButton(
-                          icon: const Icon(
-                            Icons.favorite_border,
+                          icon: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            // TODO: Add to favorites
+                            if (isFavorite) {
+                              tracking.removeFromFavorites(widget);
+                              isFavorite = false;
+                            } else {
+                              tracking.addToFavorites(widget);
+                              isFavorite = true;
+                            }
+                            setState(() {});
                           },
                         ),
                       ],
@@ -99,7 +113,7 @@ class AnimePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          title,
+                          widget.title,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

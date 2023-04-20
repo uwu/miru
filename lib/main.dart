@@ -1,17 +1,20 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:miru/home.dart';
+import 'home.dart';
+import 'tracking.dart' as tracking;
 
-void main() {
-  runApp(const Miru(title: "Miru"));
+void main() async {
+  await Hive.initFlutter();
+  tracking.init();
+  runApp(const Miru());
 }
 
 const Color _brandBlue = Color(0xFF6750A4);
 
 class Miru extends StatefulWidget {
-  const Miru({super.key, required this.title});
-  final String title;
+  const Miru({super.key});
 
   @override
   State<Miru> createState() => MiruState();

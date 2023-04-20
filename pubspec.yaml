@@ -37,11 +37,13 @@ dependencies:
   http: ^0.13.5
   carousel_slider: ^4.2.1
   flutter_svg: ^2.0.4
-  hive: ^2.2.3
   cached_network_image: ^3.2.3
   video_thumbnail: ^0.5.3
   path_provider: ^2.0.14
   flutter_vlc_player: ^7.2.0
+  async: ^2.10.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_test:

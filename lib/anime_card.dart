@@ -1,23 +1,38 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:miru/anime_page.dart';
+import 'anime_page.dart';
+import 'utils.dart';
 
-String clipTitle(String title) {
-  final words = title.split(" ");
-  // Display only 6 words max
-  if (words.length > 6) {
-    return "${words.take(6).join(" ")}...";
-  } else {
-    return title;
+List<Widget> animeCardsFromList(BuildContext context, List items) {
+  List<Widget> widgets = [];
+  for (final item in items) {
+    widgets.add(
+      AnimeCard(
+        id: item["id"],
+        title: item["title"].isEmpty
+            ? titleCase(removeDashes(item["id"]))
+            : item["title"],
+        image: item["image"],
+        size: MediaQuery.of(context).size.width / 2 * 0.8,
+      ),
+    );
   }
+  return widgets;
 }
 
 class AnimeCard extends StatelessWidget {
   const AnimeCard(
-      {super.key, required this.id, required this.title, required this.image});
+      {super.key,
+      required this.id,
+      required this.title,
+      required this.image,
+      this.size = 200,
+      this.episode = ""});
   final String title;
   final String image;
   final String id;
+  final double size;
+  final String episode;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +47,8 @@ class AnimeCard extends StatelessWidget {
             CachedNetworkImage(
               imageUrl: image,
               fit: BoxFit.cover,
-              width: 200,
+              width: size,
+              height: size * 1.5,
               placeholder: (context, url) => Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
@@ -65,10 +81,10 @@ class AnimeCard extends StatelessWidget {
                   ],
                 ),
               ),
-              width: 200,
+              width: size,
               padding: const EdgeInsets.all(8),
               child: Text(
-                clipTitle(title),
+                clipTitle(title) + (episode.isEmpty ? "" : "\n Ep. $episode"),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.white,
@@ -92,6 +108,10 @@ class AnimeCard extends StatelessWidget {
                     ),
                   );
                 },
+                child: SizedBox(
+                  width: size,
+                  height: size * 1.5,
+                ),
               ),
             )
           ],
