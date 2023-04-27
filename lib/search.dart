@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:miru/page_builder.dart';
 import 'anime_card.dart';
 import 'grid.dart';
 import 'api.dart' as api;
