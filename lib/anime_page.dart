@@ -209,7 +209,11 @@ class AnimePageState extends State<AnimePage> {
                               ),
                             ),
                             clipBehavior: Clip.antiAlias,
-                            child: EpisodeList(episodes: result["episodes"]),
+                            child: EpisodeList(
+                              episodes: result["episodes"],
+                              pageImage: widget.image,
+                              pageTitle: widget.title,
+                            ),
                           ),
                         ),
                       ],

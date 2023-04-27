@@ -4,6 +4,7 @@ import 'episode_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'api.dart' as api;
+import 'tracking.dart' as tracking;
 
 Future<File> getPreviewImage(String episodeId) async {
   // Attempt to read from cache
@@ -37,9 +38,14 @@ Future<File> getPreviewImage(String episodeId) async {
 }
 
 class EpisodeList extends StatelessWidget {
-  const EpisodeList({super.key, required this.episodes});
+  const EpisodeList(
+      {super.key,
+      required this.episodes,
+      required this.pageImage,
+      required this.pageTitle});
   final List episodes;
-  final bool seen = false;
+  final String pageImage;
+  final String pageTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +109,8 @@ class EpisodeList extends StatelessWidget {
                                   .textTheme
                                   .titleMedium!
                                   .copyWith(
-                                    color: seen
+                                    color: tracking.history[episode["id"]] !=
+                                            null // TODO; Check if episode is seen instead of in history
                                         ? Theme.of(context).disabledColor
                                         : Theme.of(context)
                                             .textTheme
@@ -132,7 +139,9 @@ class EpisodeList extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => EpisodePage(
                           id: episode["id"],
-                          title: "Episode ${episode["number"]}",
+                          title: pageTitle,
+                          episode: episode["number"],
+                          image: pageImage,
                         ),
                       ),
                     );

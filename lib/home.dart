@@ -160,26 +160,29 @@ class MiruHomeState extends State<MiruHome> {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  tracking.history.isNotEmpty
-                      ? Container(
-                          padding: const EdgeInsets.fromLTRB(12, 16, 0, 8),
-                          // child: Grid(
-                          //   children: animeCardsFromList(
-                          //     context,
-                          //     tracking.getHistory(),
-                          //   ),
-                          // ),
+                  Builder(
+                    builder: (context) {
+                      List history = tracking.getHistory();
+                      print(history);
+                      if (history.isNotEmpty) {
+                        return Grid(
+                          children: animeCardsFromList(
+                            context,
+                            history,
+                          ),
+                        );
+                      }
+                      return Center(
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(12, 64, 0, 8),
                           child: const Text(
-                              "I'll be honest. This shouldn't happen."))
-                      : Center(
-                          child: Container(
-                            padding: const EdgeInsets.fromLTRB(12, 64, 0, 8),
-                            child: const Text(
-                              "Go watch something! \n٩(•̤̀ᵕ•̤́๑)ᵒᵏᵎᵎᵎᵎ \n(TODO)",
-                              textAlign: TextAlign.center,
-                            ),
+                            "Go watch something! \n٩(•̤̀ᵕ•̤́๑)ᵒᵏᵎᵎᵎᵎ \n(TODO)",
+                            textAlign: TextAlign.center,
                           ),
                         ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

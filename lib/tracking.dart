@@ -35,10 +35,6 @@ List getFavorites() {
   return favorites.values.toList();
 }
 
-Future<List> getFavoritesFuture() async {
-  return favorites.values.toList();
-}
-
 void removeFromFavorites(AnimePage page) {
   favorites.remove(page.id);
   Hive.openBox('miru').then((box) {
@@ -47,10 +43,29 @@ void removeFromFavorites(AnimePage page) {
 }
 
 void addToHistory(EpisodePage page) {
-  history[page.id] = page;
+  history[page.id] = {
+    "title": page.title,
+    "id": page.id,
+    "episode": page.episode,
+    "image": page.image,
+    "timeAdded": DateTime.now().millisecondsSinceEpoch,
+  };
   Hive.openBox('miru').then((box) {
     box.put('history', history);
   });
+}
+
+List getHistory() {
+  // reset history
+
+  // history = {};
+  // Hive.openBox('miru').then((box) {
+  //   box.put('history', history);
+  // });
+
+  List h = history.values.toList();
+  h.sort((a, b) => b["timeAdded"].compareTo(a["timeAdded"]));
+  return h;
 }
 
 String getTimestamp(String id) {

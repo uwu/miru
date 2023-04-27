@@ -14,6 +14,7 @@ List<Widget> animeCardsFromList(BuildContext context, List items) {
             : item["title"],
         image: item["image"],
         size: MediaQuery.of(context).size.width / 2 * 0.8,
+        episode: item["episode"] != null ? item["episode"].toString() : "",
       ),
     );
   }
