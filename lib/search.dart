@@ -57,7 +57,11 @@ class SearchState extends State<SearchPage> {
         body: SingleChildScrollView(
           child: Column(children: [
             loading
-                ? const Center(child: CircularProgressIndicator())
+                ? Center(
+                    child: Container(
+                    padding: const EdgeInsets.all(16),
+                    child: const CircularProgressIndicator(),
+                  ))
                 : Grid(children: results),
             hasNextPage
                 ? ElevatedButton(
