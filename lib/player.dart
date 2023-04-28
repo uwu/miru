@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:wakelock/wakelock.dart';
 
 import 'player_controls.dart';
 
@@ -45,6 +46,7 @@ class PlayerState extends State<Player> {
       DeviceOrientation.landscapeLeft,
     ]);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    Wakelock.enable();
 
     _videoPlayerController = VlcPlayerController.network(
       widget.streamUrl,
@@ -71,9 +73,6 @@ class PlayerState extends State<Player> {
   @override
   void dispose() {
     // Ensure disposing of the VideoPlayerController to free up resources.
-    //_videoPlayerController.stopRecording();
-    _videoPlayerController.stopRendererScanning();
-    _videoPlayerController.dispose();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
@@ -82,6 +81,9 @@ class PlayerState extends State<Player> {
     ]);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
+    Wakelock.disable();
+    _videoPlayerController.stopRendererScanning();
+    _videoPlayerController.dispose();
     super.dispose();
   }
 
